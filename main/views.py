@@ -1,5 +1,8 @@
 from django.shortcuts import render
 
+from .forms import CitiesForm
+
 # Create your views here.
 def index(request):
-    return render(request, "index.html")
+    form = CitiesForm()
+    return render(request, "index.html", {'form': form})
