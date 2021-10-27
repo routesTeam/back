@@ -1,0 +1,54 @@
+.wrapper {
+    margin: 0 auto;
+    max-width: 900px;
+    padding-top: 10px;
+}
+
+.bg {
+    background-image: url('../img/bg.png');
+    background-size: auto;
+    background-position: center;
+    width: 100%;
+    z-index: 0;
+    height: 70px;
+}
+
+.header__title {
+    text-align: center;
+}
+
+.search-form__button {
+    margin-top: 15px;
+}
+
+.routes {
+    margin-top: 20px;
+}
+
+.routes__item {
+    border-bottom:gray 1px dashed;
+    padding-bottom: 10px;
+}
+
+.rout {
+    padding: 5px;
+}
+
+.rout__title {
+    font-size: 24px;
+    color: gray;
+}
+
+.rout__path {
+    display: flex;
+    flex-direction: row;
+} 
+
+.waypoint__title {
+    font-weight: bold;
+}
+
+.waypoint__transport {
+    margin-top: -13px;
+    font-size: 13px;
+}
