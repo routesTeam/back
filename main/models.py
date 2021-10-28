@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class Route(models.Model):
+  first_city = models.CharField(max_length=200)
+  second_city = models.CharField(max_length=200)
+  path = models.JSONField()
