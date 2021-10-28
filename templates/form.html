@@ -1,0 +1,22 @@
+<form action="/" method="get">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+  </div>
+  {% endfor %}
+  <div class="form-check">
+    <input type="radio" class="form-check-input" id="onlyRoad" name="flexRadioDefault">
+    <label class="form-check-label" for="onlyRoad">Только наземный транспорт</label>
+  </div>
+  <div class="form-check">
+      <input type="radio" class="form-check-input" id="fast" name="flexRadioDefault" checked>
+      <label class="form-check-label" for="fast">Самый быстрый способ</label>
+  </div>
+  <div class="form-check">
+      <input type="radio" class="form-check-input" id="lowCoast" name="flexRadioDefault">
+      <label class="form-check-label" for="lowCoast">Наиболее дешёвый путь</label>
+  </div>
+  <button type="submit" class="btn btn-primary search-form__button">Поехали</button>
+</form>
