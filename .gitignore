@@ -1,4 +1,3 @@
-*/__pycache__/
+__pycache__/
 routes/settings.py
-routes/__pycache__
 db.sqlite3
