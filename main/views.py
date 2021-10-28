@@ -8,7 +8,7 @@ def index(request):
       'first_city': request.GET.get('first_city'),
       'second_city': request.GET.get('second_city')
     })
-    # form.fields["secondCityValue"].inital = request.GET.get('secondCity')
+    
     return render(request, "index.html", {
       'form': form,
     })
