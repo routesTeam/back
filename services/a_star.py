@@ -3,7 +3,7 @@ import queue
 def heuristic(vert_a, vert_b):
     return abs(vert_b.x - vert_a.x) + abs(vert_b.y - vert_a.y)
 
-def a_start(start_city_name, goal_city_name, vertices, edges, edge_prop):
+def a_star(start_city_name, goal_city_name, vertices, edges, edge_prop):
     for x_vert in vertices:
         if x_vert.city_name == start_city_name:
             start_vert = x_vert
@@ -43,8 +43,8 @@ def a_start(start_city_name, goal_city_name, vertices, edges, edge_prop):
 
                 next_distance = distance[current_vert.city_name] + dist_to_next
 
-                if next_vert.city_name not in distance or  next_distance < distance[next_vert.city_name]
-                    priority = heuristic(goal_vert, next_vert)
+                if next_vert.city_name not in distance or next_distance < distance[next_vert.city_name]:
+                    distance[next_vert.city_name] = next_distance
+                    priority = next_distance + heuristic(goal_vert, next_vert)
                     vertices_queue.put(next_vert, priority)
-                    our_path[start_vert] = next_vert.city_id
                     our_path[next_vert.city_name] = current_vert.city_name
