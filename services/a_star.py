@@ -23,7 +23,7 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
     cities_queue = queue.PriorityQueue()
     cities_queue.put(start_vert, 0)
 
-    while not our_path.emplty():
+    while not cities_queue.empty():
         current_vert = cities_queue.get()
 
         if current_vert.name == goal_vert.name:
