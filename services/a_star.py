@@ -1,24 +1,24 @@
 import queue
 
 def heuristic(vert_a, vert_b):
-    return abs(vert_b.x - vert_a.x) + abs(vert_b.y - vert_a.y)
+    return abs(vert_b.point_x - vert_a.point_x) + abs(vert_b.point_y - vert_a.point_y)
 
-def a_star(start_city_name, goal_city_name, cities, relations, props_relation):
+def a_star(start_name, goal_name, cities, relations, props_relation):
     for x_vert in cities:
-        if x_vert.city_name == start_city_name:
+        if x_vert.name == start_name:
             start_vert = x_vert
             break
 
     for x_vert in cities:
-        if x_vert.city_name == goal_city_name:
+        if x_vert.name == goal_name:
             goal_vert = x_vert
             break
 
 
     our_path = {}
     distance = {}
-    our_path[start_city_name] = None
-    distance[start_city_name] = 0
+    our_path[start_name] = None
+    distance[start_name] = 0
 
     cities_queue = queue.PriorityQueue()
     cities_queue.put(start_vert, 0)
@@ -26,7 +26,7 @@ def a_star(start_city_name, goal_city_name, cities, relations, props_relation):
     while not our_path.emplty():
         current_vert = cities_queue.get()
 
-        if current_vert.city_name == goal_vert.city_name:
+        if current_vert.name == goal_vert.name:
             break
 
         for x_edge in relations:
@@ -41,12 +41,12 @@ def a_star(start_city_name, goal_city_name, cities, relations, props_relation):
                         dist_to_next = x_prop.time
                         break
 
-                next_distance = distance[current_vert.city_name] + dist_to_next
+                next_distance = distance[current_vert.name] + dist_to_next
 
-                if next_vert.city_name not in distance or next_distance < distance[next_vert.city_name]:
-                    distance[next_vert.city_name] = next_distance
+                if next_vert.name not in distance or next_distance < distance[next_vert.name]:
+                    distance[next_vert.name] = next_distance
                     priority = next_distance + heuristic(goal_vert, next_vert)
                     cities_queue.put(next_vert, priority)
-                    our_path[next_vert.city_name] = current_vert.city_name
+                    our_path[next_vert.name] = current_vert.name
 
-  return our_path
+    return our_path
