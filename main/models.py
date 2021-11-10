@@ -34,4 +34,3 @@ class PropsRelation(models.Model):
     'Relation',
     on_delete=models.CASCADE
   )
-

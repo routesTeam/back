@@ -5,6 +5,7 @@
           <div class="routes__item">
               <div class="rout">
                   <h3 class="rout__title">Маршрут 1</h3>
+                  {{ city }}
                   {% for route in routes %}
                   {{ route.path }} <br>
                   {% endfor %}
