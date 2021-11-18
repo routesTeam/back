@@ -7,16 +7,28 @@
   </div>
   {% endfor %}
   <div class="form-check">
-    <input type="radio" class="form-check-input" id="onlyRoad" name="flexRadioDefault">
+    {% if priority == 'onlyRoad' %}
+      <input type="radio" class="form-check-input" id="onlyRoad" value="onlyRoad" name="priority" checked>
+    {% else %}
+      <input type="radio" class="form-check-input" id="onlyRoad" value="onlyRoad" name="priority">
+    {% endif %}
     <label class="form-check-label" for="onlyRoad">Только наземный транспорт</label>
   </div>
   <div class="form-check">
-      <input type="radio" class="form-check-input" id="fast" name="flexRadioDefault" checked>
+    {% if priority == 'fast' %}
+      <input type="radio" class="form-check-input" id="fast" value="fast" name="priority" checked>
+    {% else %}
+      <input type="radio" class="form-check-input" id="fast" value="fast" name="priority">
+    {% endif %}
       <label class="form-check-label" for="fast">Самый быстрый способ</label>
   </div>
   <div class="form-check">
-      <input type="radio" class="form-check-input" id="lowCoast" name="flexRadioDefault">
-      <label class="form-check-label" for="lowCoast">Наиболее дешёвый путь</label>
+    {% if priority == 'lowCost' %}
+      <input type="radio" class="form-check-input" id="lowCost" value="lowCost" name="priority" checked>
+    {% else %}
+      <input type="radio" class="form-check-input" id="lowCost" value="lowCost" name="priority">
+    {% endif %}
+      <label class="form-check-label" for="lowCost">Наиболее дешёвый путь</label>
   </div>
   <button type="submit" class="btn btn-primary search-form__button">Поехали</button>
 </form>
