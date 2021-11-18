@@ -32,6 +32,10 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
     path_exists = False;
     distance[start_name] = 0
 
+    relation_props_in_path = {}
+    relation_props_in_path[start_name] = None
+
+
 
     cities_queue = queue.PriorityQueue()
 
@@ -58,22 +62,30 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
                 for x_prop in props_relation:
                     if x_prop.relation_id == x_edge.id:
                         dist_to_next = x_prop.time
+                        prop_relation_next = x_prop
                         break
 
                 next_distance = distance[current_vert.name] + dist_to_next
 
                 if next_vert.name not in distance or next_distance < distance[next_vert.name]:
+
                     distance[next_vert.name] = next_distance
+
                     priority = next_distance + heuristic(goal_vert, next_vert)
 
                     cities_queue.put(((priority, next_vert.id), next_vert))
                     paths[next_vert.name] = current_vert.name
+
+                    relation_props_in_path[next_vert.name] = [prop_relation_next.relation_type, prop_relation_next.time, prop_relation_next.cost]
+
         reviewed_verts.append(current_vert.id)
+
 
     if not path_exists:
         return "path doesn't exist"
 
     final_path = []
+    final_relation_props_in_path = {}
 
     temp_city = goal_name
     final_path.append(temp_city)
@@ -81,7 +93,11 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
         temp_city = paths[temp_city]
         final_path.append(temp_city)
     final_path.reverse()
-    return final_path
+
+    for x in final_path:
+        final_relation_props_in_path[x] = relation_props_in_path[x]
+
+    return final_path, final_relation_props_in_path
 
 
 '''
