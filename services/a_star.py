@@ -39,12 +39,17 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
 
     while not cities_queue.empty():
         current_vert = cities_queue.get()[1]
+
+        if current_vert.id in reviewed_verts:
+            continue
+
         if current_vert.name == goal_vert.name:
             path_exists = True
             break
 
         for x_edge in relations:
             if x_edge.first_city_id == current_vert.id and x_edge.second_city_id not in reviewed_verts:
+
                 for x_vert in cities:
                     if x_vert.id == x_edge.second_city_id:
                         next_vert = x_vert
@@ -62,12 +67,8 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
                     priority = next_distance + heuristic(goal_vert, next_vert)
 
                     cities_queue.put(((priority, next_vert.id), next_vert))
-                    print(str(next_vert.id) + ' ' + str(priority))
                     paths[next_vert.name] = current_vert.name
-        print(distance)
         reviewed_verts.append(current_vert.id)
-        print(reviewed_verts)
-
 
     if not path_exists:
         return "path doesn't exist"
@@ -80,4 +81,4 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
         temp_city = paths[temp_city]
         final_path.append(temp_city)
     final_path.reverse()
-    return distance
+    return final_path
