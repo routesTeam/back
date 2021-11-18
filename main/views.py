@@ -18,7 +18,11 @@ def index(request):
 
     city = City.objects.all()
 
-    res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all())
+    try:
+        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all())
+    except ValueError as err:
+        print(str(err))
+        res = None
 
     return render(request, "index.html", {
       'form': form,
