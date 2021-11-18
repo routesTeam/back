@@ -21,7 +21,7 @@ def index(request):
     faster = True if priority == 'fast' else False
 
     try:
-        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all())
+        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster)
     except ValueError as err:
         print(str(err))
         res = None

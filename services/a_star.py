@@ -3,7 +3,7 @@ import queue
 def heuristic(vert_a, vert_b):
     return abs(vert_b.point_x - vert_a.point_x) + abs(vert_b.point_y - vert_a.point_y)
 
-def a_star(start_name, goal_name, cities, relations, props_relation):
+def a_star(start_name, goal_name, cities, relations, props_relation, search_feature):
 
     start_vert = None
     goal_vert = None
@@ -61,7 +61,7 @@ def a_star(start_name, goal_name, cities, relations, props_relation):
 
                 for x_prop in props_relation:
                     if x_prop.relation_id == x_edge.id:
-                        dist_to_next = x_prop.time
+                        dist_to_next = x_prop.time if search_feature else x_prop.cost
                         prop_relation_next = x_prop
                         break
 
