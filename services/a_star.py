@@ -91,13 +91,12 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
     final_path.append(temp_city)
     while  paths[temp_city] != None:
         temp_city = paths[temp_city]
-        final_path.append(temp_city)
+        final_path.append({'name': temp_city, 'props': relation_props_in_path[temp_city]})
     final_path.reverse()
 
-    for x in final_path:
-        final_relation_props_in_path[x] = relation_props_in_path[x]
+    final_path[len(final_path)-1] = {'name': final_path[len(final_path)-1], 'props': relation_props_in_path[final_path[len(final_path)-1]]}
 
-    return final_path, final_relation_props_in_path
+    return final_path
 
 
 '''
