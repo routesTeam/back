@@ -5,36 +5,40 @@
           <div class="routes__item">
               <div class="rout">
                   <h3 class="rout__title">Маршрут 1</h3>
-                  {{ city }}
+                  {% for el in city %}
+                  {{ el }} <br>
+                  {% endfor %}
                   {% for route in routes %}
                   {{ route.path }} <br>
                   {% endfor %}
-                  <div class="rout__path path">
-                      <div class="path__waypoint waypoint">
-                          <div class="waypoint__title"><p>Москва</p></div>
-                          <div class="waypoint__transport">Авто</div>
+                  <div class="rout__path path container">
+                    <div class="row align-items-center">
+                      <div class="path__waypoint waypoint col-sm">
+                        <div class="waypoint__title align-middle"><p>Москва</p></div>
                       </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="blue" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                      <div class="path__arrow col-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="blue" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
                           <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-                      </svg>
-                      <div class="path__waypoint waypoint">
-                          <div class="waypoint__title"><p>Санкт-Петербург</p></div>
-                          <div class="waypoint__transport">Авто</div>
+                        </svg>
                       </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="blue" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-                      </svg>
-                      <div class="path__waypoint waypoint">
-                          <div class="waypoint__title"><p>Санкт-Петербург</p></div>
-                          <div class="waypoint__transport">Авто</div>
+                      <div class="path__waypoint waypoint col-sm">
+                        <div class="waypoint__title align-middle"><p>Санкт-Петербург</p></div>
                       </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="blue" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-                      </svg>
-                      <div class="path__waypoint waypoint">
-                          <div class="waypoint__title"><p>Санкт-Петербург</p></div>
-                          <div class="waypoint__transport">Авто</div>
+                    </div>
+                    <div class="waypoint__props props">
+                      <div class="props__item prop">
+                        <div class="prop__name">Транспорт:</div>
+                        <div class="prop__value">самолет</div>
                       </div>
+                      <div class="props__item prop">
+                        <div class="prop__name">Время:</div>
+                        <div class="prop__value">9 часов</div>
+                      </div>
+                      <div class="props__item prop">
+                        <div class="prop__name">Ценя:</div>
+                        <div class="prop__value">6.000 ₽</div>
+                      </div>
+                    </div>
                   </div>
               </div>
           </div>
