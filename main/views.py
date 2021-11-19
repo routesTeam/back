@@ -26,9 +26,17 @@ def index(request):
         print(str(err))
         res = None
 
+    route = []
+
+    if res != None:
+        for x in range(len(res)-1):
+            print(x)
+            route.append({'first': res[x]['name'], 'props': res[x+1]['props'], 'second': res[x+1]['name']})
+
+
     return render(request, "index.html", {
       'form': form,
-      'city': res,
+      'route': route,
       'priority': priority,
       'routes': Route.objects.all().filter(first_city=first_city, second_city=second_city)
     })
