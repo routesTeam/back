@@ -5,6 +5,8 @@
           <div class="routes__item">
               <div class="rout">
                   <h3 class="rout__title">Ваш маршрут</h3>
+                  <div>Общее время маршрута: <b>{{ sum.time }} часов</b></div>
+                  <div>Общая стоимость маршрута: <b>{{ sum.cost }}₽</b></div>
                   {% for el in route %}
                   <div class="rout__path path container">
                     <div class="row align-items-center">
