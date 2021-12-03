@@ -177,18 +177,14 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
     final_relation_props_in_path = {}
 
     temp_city = goal_name
-    final_path.append(temp_city)
     while  paths[temp_city] != None:
         temp_city = paths[temp_city]
-        final_path.append({'name': temp_city, 'props': relation_props_in_path[temp_city]})
+        final_path.append({'name': temp_city, 'props': relation_props_in_path[temp_city], 'time': arrival_departure[temp_city]})
     final_path.reverse()
 
-    final_path[len(final_path)-1] = {'name': final_path[len(final_path)-1], 'props': relation_props_in_path[final_path[len(final_path)-1]]}
+    final_path.append({'name': goal_name, 'props': relation_props_in_path[goal_name], 'time': arrival_departure[goal_name]})
 
     print(final_path)
-    print(arrival_departure)
-
-    
     return final_path
 
 
