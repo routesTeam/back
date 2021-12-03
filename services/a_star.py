@@ -184,6 +184,7 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
 
     final_path.append({'name': goal_name, 'props': relation_props_in_path[goal_name], 'time': arrival_departure[goal_name]})
 
+
     print(final_path)
     return final_path
 
