@@ -33,9 +33,13 @@ def index(request):
         for x in range(len(res)-1):
             sum['time'] += res[x+1]['props'][1]
             sum['cost'] += res[x+1]['props'][2]
-            print(sum)
-            route.append({'first': res[x]['name'], 'props': res[x+1]['props'], 'second': res[x+1]['name']})
-
+            # print(res)
+            route.append({'first': {'name': res[x]['name'], 'time': res[x]['time'][1]}, 
+                          'props': res[x+1]['props'], 
+                          'second': {'name': res[x+1]['name'], 'time': res[x+1]['time'][0]}
+                        })
+    print("-----------")
+    print(route)
 
     return render(request, "index.html", {
       'form': form,
