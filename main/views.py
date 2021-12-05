@@ -21,7 +21,7 @@ def index(request):
     faster = True if priority == 'fast' else False
 
     try:
-        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster)
+        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, '11:53')
     except ValueError as err:
         print(str(err))
         res = None
@@ -33,9 +33,13 @@ def index(request):
         for x in range(len(res)-1):
             sum['time'] += res[x+1]['props'][1]
             sum['cost'] += res[x+1]['props'][2]
-            print(sum)
-            route.append({'first': res[x]['name'], 'props': res[x+1]['props'], 'second': res[x+1]['name']})
-
+            # print(res)
+            route.append({'first': {'name': res[x]['name'], 'time': res[x]['time'][1]}, 
+                          'props': res[x+1]['props'], 
+                          'second': {'name': res[x+1]['name'], 'time': res[x+1]['time'][0]}
+                        })
+    print("-----------")
+    print(route)
 
     return render(request, "index.html", {
       'form': form,
@@ -43,4 +47,6 @@ def index(request):
       'sum': sum,
       'priority': priority,
       'routes': Route.objects.all().filter(first_city=first_city, second_city=second_city)
+
+
     })
