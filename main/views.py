@@ -4,6 +4,8 @@ from django.shortcuts import render
 import json
 import networkx as nx
 import math
+import random
+import datetime
 
 from .forms import CitiesForm
 from .models import Route
@@ -55,6 +57,36 @@ def index(request):
 
 
     })
+
+
+def get_schedule(vehicle):
+
+    schedule = []
+
+    time_end = datetime.datetime.strptime('23:59', '%H:%M')
+
+    if vehicle == 'Plane':
+        time_deltas = [0.5, 1, 2, 5, 10]
+        time_disp = datetime.datetime.strptime('00:00', '%H:%M')
+    elif vehicle == 'Train':
+        time_deltas = [1, 2, 5, 6, 7, 10]
+        time_disp = datetime.datetime.strptime('00:00', '%H:%M')
+    else:
+        time_deltas = [0.25, 0.5, 1]
+        time_disp = datetime.datetime.strptime('08:00', '%H:%M')
+
+    time_disp = time_disp + datetime.timedelta(
+        hours=random.choice(time_deltas))
+
+    while time_disp < time_end:
+        schedule.append(
+            datetime.datetime.strftime(time_disp, '%H:%M'))
+
+        time_disp = time_disp + datetime.timedelta(
+            hours=random.choice(time_deltas))
+    return schedule
+
+
 
 
 def GD(la1, la2, lo1, lo2):
