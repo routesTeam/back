@@ -1,4 +1,9 @@
+from django.http.request import MediaType
+from django.http.response import HttpResponse
 from django.shortcuts import render
+import json
+import networkx as nx
+import math
 
 from .forms import CitiesForm
 from .models import Route
@@ -50,3 +55,71 @@ def index(request):
 
 
     })
+
+
+def GD(la1, la2, lo1, lo2):
+    # The math module contains the function name "radians" which is used for converting the degrees value into radians.
+    lo1 = math.radians(lo1)
+    lo2 = math.radians(lo2)
+    la1 = math.radians(la1)
+    la2 = math.radians(la2)
+
+    # Using the "Haversine formula"
+    d_lo = lo2 - lo1
+    d_la = la2 - la1
+    p = math.sin(d_la / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin(d_lo / 2) ** 2
+
+    q = 2 * math.asin(math.sqrt(p))
+
+    # The radius of earth in kilometres.
+    r_km = 6371
+
+    # Then, we will calculate the result
+    return q * r_km
+
+
+def getTransports(dist): 
+    plane_cost = 4
+    plane_speed = 800 
+
+    res = []
+    transport = {}
+    if dist > 1000:
+      transport['name'] = 'самолет'
+      transport['price'] = round(plane_cost * dist, 2)
+      transport['time'] = round((dist / 800 * 60) + 60, 2)
+      res.append(transport)
+    
+    return res
+    # return [['name': 'самолет', 'price': 100, ''],['name': 'самолет', 'price']]
+
+
+def generator(request):
+
+    G = nx.fast_gnp_random_graph(1000, 0.0115, seed=None, directed=False)
+
+    edge_index = 1
+    cities = City.objects.all()
+    for x in list(G.edges):
+        if x[0] == 0 or x[1] == 0:
+            continue
+        
+        for city in cities:
+          if city.id == x[0]:
+            first_city_id = city.id
+            first_city_lat = city.point_x
+            first_city_lng = city.point_y
+
+          if city.id == x[1]:
+            second_city_id = city.id
+            second_city_lat = city.point_x
+            second_city_lng = city.point_y
+        
+        # relationId = записываем в таблицу relation
+        dest = GD(first_city_lat, first_city_lng, second_city_lat, second_city_lng)        
+        print(first_city_id, second_city_id)
+        print(getTransports(dest))
+
+        edge_index += 1
+
+    return HttpResponse(json.dumps([]), content_type="application/json")
