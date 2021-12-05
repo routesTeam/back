@@ -21,7 +21,7 @@ def index(request):
     faster = True if priority == 'fast' else False
 
     try:
-        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster)
+        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, '11:53')
     except ValueError as err:
         print(str(err))
         res = None
@@ -43,4 +43,6 @@ def index(request):
       'sum': sum,
       'priority': priority,
       'routes': Route.objects.all().filter(first_city=first_city, second_city=second_city)
+
+
     })
