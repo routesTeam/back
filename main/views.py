@@ -3,7 +3,8 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 import json
 import networkx as nx
-import math
+
+from .properties_service import *
 
 from .forms import CitiesForm
 from .models import Route
@@ -57,41 +58,17 @@ def index(request):
     })
 
 
-def GD(la1, la2, lo1, lo2):
-    # The math module contains the function name "radians" which is used for converting the degrees value into radians.
-    lo1 = math.radians(lo1)
-    lo2 = math.radians(lo2)
-    la1 = math.radians(la1)
-    la2 = math.radians(la2)
-
-    # Using the "Haversine formula"
-    d_lo = lo2 - lo1
-    d_la = la2 - la1
-    p = math.sin(d_la / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin(d_lo / 2) ** 2
-
-    q = 2 * math.asin(math.sqrt(p))
-
-    # The radius of earth in kilometres.
-    r_km = 6371
-
-    # Then, we will calculate the result
-    return q * r_km
-
-
-def getTransports(dist): 
-    plane_cost = 4
-    plane_speed = 800 
-
-    res = []
-    transport = {}
-    if dist > 1000:
-      transport['name'] = 'самолет'
-      transport['price'] = round(plane_cost * dist, 2)
-      transport['time'] = round((dist / 800 * 60) + 60, 2)
-      res.append(transport)
-    
-    return res
-    # return [['name': 'самолет', 'price': 100, ''],['name': 'самолет', 'price']]
+def testgen(request):
+    # city = CityDebug(name='второй город', point_x=0.2341, point_y=1.2345)
+    # city.save()
+    # relation = RelationDebug(first_city_id=1, second_city_id=2)
+    # relation.save()
+    # print(relation.id) 
+    shedule = 'null'
+    props_relation = PropsRelationDebug(relation_type='Авто', time=120, 
+                                        cost=0, relation_id=1, schedule=json.dumps(shedule))
+    props_relation.save()                                    
+    return HttpResponse(json.dumps([]), content_type="application/json")
 
 
 def generator(request):
@@ -115,11 +92,30 @@ def generator(request):
             second_city_lat = city.point_x
             second_city_lng = city.point_y
         
-        # relationId = записываем в таблицу relation
-        dest = GD(first_city_lat, first_city_lng, second_city_lat, second_city_lng)        
-        print(first_city_id, second_city_id)
-        print(getTransports(dest))
+        
+        relation_from = Relation(first_city_id=first_city_id, second_city_id=second_city_id)
+        relation_to = Relation(first_city_id=second_city_id, second_city_id=first_city_id)
+        relation_from.save()
+        relation_to.save()
 
+        # relationId = записываем в таблицу relation
+        relation_from_id = relation_from.id
+        relation_to_id = relation_to.id
+
+        props_relation_list = generate_props_relation(first_city_lat, first_city_lng, second_city_lat, second_city_lng)
+
+        for prop in props_relation_list:
+          props_relation_from = PropsRelation(relation_type=prop['name'], time=prop['time'], 
+                                        cost=prop['price'], 
+                                        relation_id=relation_from_id, 
+                                        schedule=json.dumps(prop['shedule']))
+          props_relation_to = PropsRelation(relation_type=prop['name'], time=prop['time'], 
+                                        cost=prop['price'], 
+                                        relation_id=relation_to_id, 
+                                        schedule=json.dumps(prop['shedule']))                              
+          props_relation_from.save()  
+          props_relation_to.save()
+        
         edge_index += 1
 
     return HttpResponse(json.dumps([]), content_type="application/json")

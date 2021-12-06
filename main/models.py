@@ -67,6 +67,7 @@ class PropsRelationDebug(models.Model):
   relation_type = models.CharField(max_length=200)
   time = models.IntegerField()
   cost = models.FloatField()
+  schedule = models.JSONField(default='null')
   relation = models.ForeignKey(
     'RelationDebug',
     on_delete=models.CASCADE
