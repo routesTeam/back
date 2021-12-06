@@ -133,7 +133,7 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
                 #get earlier time in object and string
                 schedule = ['10:00', '15:00', '20:00']
                 print(schedule)
-                (temp_departure_time, str_departure_time)  = get_min_arrival_time(schedule, temp_arrival_time)
+                (temp_departure_time, str_departure_time) = get_min_arrival_time(schedule, temp_arrival_time)
 
                 #we are waiting vehicle - waiting time calculation
                 time_waiting = (temp_departure_time - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
@@ -147,7 +147,7 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
 
 
 
-                next_distance = distance[current_vert.name] + dist_to_next + time_waiting if search_feature else 0 #now with waiting time
+                next_distance = distance[current_vert.name] + dist_to_next + (time_waiting if search_feature else 0) #now with waiting time
                 #next_distance = distance[current_vert.name] + dist_to_next
 
                 if next_vert.name not in distance or next_distance < distance[next_vert.name]:
