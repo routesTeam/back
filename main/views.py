@@ -58,6 +58,19 @@ def index(request):
     })
 
 
+def testgen(request):
+    # city = CityDebug(name='второй город', point_x=0.2341, point_y=1.2345)
+    # city.save()
+    # relation = RelationDebug(first_city_id=1, second_city_id=2)
+    # relation.save()
+    # print(relation.id) 
+    shedule = 'null'
+    props_relation = PropsRelationDebug(relation_type='Авто', time=120, 
+                                        cost=0, relation_id=1, schedule=json.dumps(shedule))
+    props_relation.save()                                    
+    return HttpResponse(json.dumps([]), content_type="application/json")
+
+
 def generator(request):
 
     G = nx.fast_gnp_random_graph(1000, 0.0115, seed=None, directed=False)
@@ -79,8 +92,29 @@ def generator(request):
             second_city_lat = city.point_x
             second_city_lng = city.point_y
         
+        
+        relation_from = Relation(first_city_id=first_city_id, second_city_id=second_city_id)
+        relation_to = Relation(first_city_id=second_city_id, second_city_id=first_city_id)
+        relation_from.save()
+        relation_to.save()
+
         # relationId = записываем в таблицу relation
-        print(generate_props_relation(first_city_lat, first_city_lng, second_city_lat, second_city_lng))
+        relation_from_id = relation_from.id
+        relation_to_id = relation_to.id
+
+        props_relation_list = generate_props_relation(first_city_lat, first_city_lng, second_city_lat, second_city_lng)
+
+        for prop in props_relation_list:
+          props_relation_from = PropsRelation(relation_type=prop['name'], time=prop['time'], 
+                                        cost=prop['price'], 
+                                        relation_id=relation_from_id, 
+                                        schedule=json.dumps(prop['shedule']))
+          props_relation_to = PropsRelation(relation_type=prop['name'], time=prop['time'], 
+                                        cost=prop['price'], 
+                                        relation_id=relation_to_id, 
+                                        schedule=json.dumps(prop['shedule']))                              
+          props_relation_from.save()  
+          props_relation_to.save()
         
         edge_index += 1
 

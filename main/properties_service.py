@@ -64,7 +64,7 @@ def get_prop_object(vehicle_name, dist, cost, speed):
     res['price'] = round(cost * dist, 2)
     res['time'] = round((dist / speed * 60) + 60, 2)
     res['shedule'] = get_schedule(res['name'])
-    
+
     return res
 
 def get_properties(dist): 
@@ -76,9 +76,12 @@ def get_properties(dist):
     plane_speed = 800 
 
     train_cost = 2
-    train_speed = 80 
+    train_speed = 70 
 
-    auto_speed = 110
+    bus_cost = 1
+    bus_speed = 100
+
+    auto_speed = 120
 
     res = []
 
@@ -89,15 +92,15 @@ def get_properties(dist):
       if train:
         res.append(get_prop_object('Поезд', dist, train_cost, train_speed))  
       if bus:
-        res.append(get_prop_object('Автобус', dist, train_cost, train_speed))
+        res.append(get_prop_object('Автобус', dist, bus_cost, bus_speed))
     elif dist > 100:
       res.append(get_prop_object('Поезд', dist, train_cost, train_speed))
       bus = random.choices([True, False], weights=(0.95,0.05))
       if bus:
-        res.append(get_prop_object('Автобус', dist, train_cost, train_speed))
+        res.append(get_prop_object('Автобус', dist, bus_speed, bus_speed))
     else:
       bus = True
-      res.append(get_prop_object('Автобус', dist, train_cost, train_speed))
+      res.append(get_prop_object('Автобус', dist, bus_speed, bus_speed))
       
     if bus:
       res.append({'name': 'авто', 'price': 0, 'time': round((dist / auto_speed * 60) + 60, 2), 'shedule': 'null'})
