@@ -17,7 +17,7 @@ def get_min_arrival_time(time_list, time_current):
 
 
 
-def a_star(start_name, goal_name, cities, relations, props_relation, search_feature, departure_time ):
+def a_star(start_name, goal_name, cities, relations, props_relation, search_feature, departure_time, only_car ):
 
     #just temporary
     schedule = {
@@ -127,30 +127,44 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
                         prop_relation_next = x_prop
                         break
 
+                print(prop_relation_next.relation_type)
+                if only_car and prop_relation_next.relation_type != 'авто':
+                    continue
+
+                print('ssdfsdfsdfsdf')
+                if not only_car and prop_relation_next.relation_type == 'авто':
+                    continue
                 #calculation waiting time
+
 
 
                 #get earlier time in object and string
                 schedule = ['10:00', '15:00', '20:00']
                 print(schedule)
-                (temp_departure_time, str_departure_time) = get_min_arrival_time(schedule, temp_arrival_time)
 
-                #we are waiting vehicle - waiting time calculation
-                time_waiting = (temp_departure_time - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+                if not only_car:
+                    (temp_departure_time, str_departure_time) = get_min_arrival_time(schedule, temp_arrival_time)
 
-                #if time is negative (when vehicle does not run and we need to wait until tomorrow)
-                if time_waiting < 0:
-                    time_waiting = (temp_departure_time +
-                                    datetime.timedelta(days=1)
-                                    - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+                    #we are waiting vehicle - waiting time calculation
+                    time_waiting = (temp_departure_time - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+
+                    #if time is negative (when vehicle does not run and we need to wait until tomorrow)
+                    if time_waiting < 0:
+                        time_waiting = (temp_departure_time +
+                                        datetime.timedelta(days=1)
+                                        - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+                else:
+                    temp_departure_time = datetime.datetime.strptime(temp_arrival_time, '%H:%M') + datetime.timedelta(hours=1)
 
 
 
 
-                next_distance = distance[current_vert.name] + dist_to_next + (time_waiting if search_feature else 0) #now with waiting time
+                next_distance = distance[current_vert.name] + dist_to_next + (time_waiting if (search_feature and not only_car) else 0) #now with waiting time
                 #next_distance = distance[current_vert.name] + dist_to_next
 
                 if next_vert.name not in distance or next_distance < distance[next_vert.name]:
+
+                    print('dsfsdfsdfsdfsdf')
                     distance[next_vert.name] = next_distance
                     priority = next_distance + heuristic(goal_vert, next_vert)
 
@@ -175,7 +189,7 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
 
 
     if not path_exists:
-        return "path doesn't exist"
+        return None
 
     final_path = []
     final_relation_props_in_path = {}
