@@ -22,12 +22,18 @@ def index(request):
     first_city = request.GET.get('first_city')
     second_city = request.GET.get('second_city')
     priority = request.GET.get('priority')
+    hours = request.GET.get('hours')
+    minutes = request.GET.get('minutes')
 
     city = City.objects.all()
     faster = True if priority == 'fast' else False
 
+    time_start = '00:00'
+    if hours != None and minutes != None:
+      time_start = hours + ':' + minutes
+    
     try:
-        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, '11:53')
+        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start)
     except ValueError as err:
         print(str(err))
         res = None
@@ -52,9 +58,11 @@ def index(request):
       'route': route,
       'sum': sum,
       'priority': priority,
+      'selected_hour': hours,
+      'selected_minute': minutes,
+      'hours': ['0' + str(h) for h in list(range(10))] + [str(h) for h in list(range(10,24))],
+      'minutes': ['0' + str(m) for m in list(range(10))] + [str(m) for m in list(range(10,61))],
       'routes': Route.objects.all().filter(first_city=first_city, second_city=second_city)
-
-
     })
 
 

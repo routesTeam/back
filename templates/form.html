@@ -30,5 +30,29 @@
     {% endif %}
       <label class="form-check-label" for="lowCost">Наиболее дешёвый путь</label>
   </div>
+
+  <div class="form-group time-select">
+    <label for="exampleFormControlSelect1">Время отправления:</label>
+    <select class="form-control" id="exampleFormControlSelect1" name="hours">
+      {% for hour in hours %}
+        {% if hour == selected_hour %}
+          <option selected>{{ hour }}</option>
+        {% else %}
+          <option>{{ hour }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <p>:</p>
+    <select class="form-control" id="exampleFormControlSelect1" name="minutes">
+      {% for minute in minutes %}
+        {% if minute == selected_minute %}
+          <option selected>{{ minute }}</option>
+        {% else %}
+          <option>{{ minute }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+  
   <button type="submit" class="btn btn-primary search-form__button">Поехали</button>
 </form>
