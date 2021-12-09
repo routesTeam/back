@@ -27,13 +27,14 @@ def index(request):
 
     city = City.objects.all()
     faster = True if priority == 'fast' else False
+    is_only_road = True if priority == 'onlyRoad' else False
 
     time_start = '00:00'
     if hours != None and minutes != None:
       time_start = hours + ':' + minutes
     
     try:
-        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start, only_car=False)
+        res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start, only_car=is_only_road)
     except ValueError as err:
         print(str(err))
         res = None

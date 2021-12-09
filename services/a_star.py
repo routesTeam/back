@@ -106,8 +106,8 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
                         if only_car and prop_relation_next.relation_type != 'авто':
                             continue
 
-                        if not only_car and prop_relation_next.relation_type == 'авто':
-                            continue
+                        # if not only_car and prop_relation_next.relation_type == 'авто':
+                        #     continue
                         #calculation waiting time
 
 
