@@ -25,18 +25,31 @@ def index(request):
     hours = request.GET.get('hours')
     minutes = request.GET.get('minutes')
 
-    city = City.objects.all()
     faster = True if priority == 'fast' else False
     is_only_road = True if priority == 'onlyRoad' else False
 
     time_start = '00:00'
     if hours != None and minutes != None:
       time_start = hours + ':' + minutes
-    
-    try:
+
+    route = Route.objects.all().filter(first_city=first_city, second_city=second_city, priority=priority)
+    res = []
+    if(len(route) == 0):
+      try:
         res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start, only_car=is_only_road)
-    except ValueError as err:
+        cache_route = json.dumps(res)
+        new_cached_route = Route(first_city=first_city, second_city=second_city, priority=priority, path=cache_route)
+        new_cached_route.save()
+      except ValueError as err:
         res = None
+    else:
+      res = json.loads(route[0].path)
+
+    
+    # try:
+    #     res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start, only_car=is_only_road)
+    # except ValueError as err:
+    #     res = None
 
     route = []
     sum = {'time': 0, 'cost': 0}

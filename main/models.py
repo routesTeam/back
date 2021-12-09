@@ -4,6 +4,7 @@ class Route(models.Model):
   id = models.AutoField(primary_key=True)
   first_city = models.CharField(max_length=200)
   second_city = models.CharField(max_length=200)
+  priority = models.CharField(max_length=200)
   path = models.JSONField()
 
 class City(models.Model):
