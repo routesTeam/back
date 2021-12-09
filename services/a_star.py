@@ -106,8 +106,8 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
                         if only_car and prop_relation_next.relation_type != 'авто':
                             continue
 
-                        # if not only_car and prop_relation_next.relation_type == 'авто':
-                        #     continue
+                        if not only_car and prop_relation_next.relation_type == 'авто':
+                            continue
                         #calculation waiting time
 
 
@@ -170,13 +170,18 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
     temp_city = goal_name
     while  paths[temp_city] != None:
         temp_city = paths[temp_city]
+        if relation_props_in_path[temp_city] != None:
+          relation_props_in_path[temp_city][1] = round(relation_props_in_path[temp_city][1] / 60, 1)
         final_path.append({'name': temp_city, 'props': relation_props_in_path[temp_city], 'time': arrival_departure[temp_city]})
+        
+        
     final_path.reverse()
+
+    if relation_props_in_path[goal_name] != None:
+      relation_props_in_path[goal_name][1] = round(relation_props_in_path[goal_name][1] / 60, 1)
 
     final_path.append({'name': goal_name, 'props': relation_props_in_path[goal_name], 'time': arrival_departure[goal_name]})
 
-
-    print(final_path)
     return final_path
 
 

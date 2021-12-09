@@ -36,7 +36,6 @@ def index(request):
     try:
         res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start, only_car=is_only_road)
     except ValueError as err:
-        print(str(err))
         res = None
 
     route = []
@@ -46,16 +45,12 @@ def index(request):
         for x in range(len(res)-1):
             sum['time'] += res[x+1]['props'][1]
             sum['cost'] += res[x+1]['props'][2]
-            # print(res)
             route.append({'first': {'name': res[x]['name'], 'time': res[x]['time'][1]}, 
                           'props': res[x+1]['props'], 
                           'second': {'name': res[x+1]['name'], 'time': res[x+1]['time'][0]}
                         })
     else:
         print("There is no route")
-
-    print("-----------")
-    print(route)
 
     return render(request, "index.html", {
       'form': form,
