@@ -82,3 +82,26 @@
   border-bottom: gray 1px dashed;
   padding-bottom: 35px;
 }
+
+.time-select {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  max-height: 30px;
+}
+
+.time-select .form-control {
+  width: auto;
+  max-height: 40px;
+  margin-left: 5px;
+}
+
+.time-select label {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.time-select p {
+  margin-top: 5px;
+  margin-left: 5px;
+}

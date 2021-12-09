@@ -1,3 +1,4 @@
+import json
 import queue
 import datetime
 
@@ -15,29 +16,7 @@ def get_min_arrival_time(time_list, time_current):
 
 
 
-def a_star(start_name, goal_name, cities, relations, props_relation, search_feature, departure_time ):
-
-    #just temporary
-    schedule = {
-        1 : ['10:00', '15:00', '20:00'],
-        2 : ['10:00', '15:00', '20:00'],
-        3 : ['10:00', '15:00', '20:00'],
-        4 : ['10:00', '15:00', '20:00'],
-        5 : ['10:00', '15:00', '20:00'],
-        6 : ['10:00', '15:00', '20:00'],
-        7 : ['10:00', '15:00', '20:00'],
-        8 : ['10:00', '15:00', '20:00'],
-        9 : ['10:00', '15:00', '20:00'],
-        10 : ['10:00', '15:00', '20:00'],
-        11 : ['10:00', '15:00', '20:00'],
-        12 : ['10:00', '15:00', '20:00'],
-        13 : ['10:00', '15:00', '20:00'],
-        14 : ['10:00', '15:00', '20:00'],
-        15 : ['10:00', '15:00', '20:00'],
-        16 : ['10:00', '15:00', '20:00'],
-        17 : ['10:00', '15:00', '20:00'],
-        18 : ['10:00', '15:00', '20:00']
-    }
+def a_star(start_name, goal_name, cities, relations, props_relation, search_feature, departure_time, only_car ):
 
 
 
@@ -65,7 +44,6 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
     reviewed_verts = []
 
 
-    #store our super ultra cool the shortest path
     arrival_departure = {}
     arrival_departure[start_name] = [departure_time, None]
 
@@ -123,55 +101,68 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
                     if x_prop.relation_id == x_edge.id:
                         dist_to_next = x_prop.time if search_feature else x_prop.cost
                         prop_relation_next = x_prop
-                        break
-
-                #calculation waiting time
 
 
-                #get earlier time in object and string
-                (temp_departure_time, str_departure_time)  = get_min_arrival_time(schedule[x_edge.id], temp_arrival_time)
+                        if only_car and prop_relation_next.relation_type != 'авто':
+                            continue
 
-                #we are waiting vehicle - waiting time calculation
-                time_waiting = (temp_departure_time - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
-
-                #if time is negative (when vehicle does not run and we need to wait until tomorrow)
-                if time_waiting < 0:
-                    time_waiting = (temp_departure_time +
-                                    datetime.timedelta(days=1)
-                                    - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+                        if not only_car and prop_relation_next.relation_type == 'авто':
+                            continue
+                        #calculation waiting time
 
 
+                        #get earlier time in object and string
+
+                        schedule = [x.replace('"','') for x in prop_relation_next.schedule[1:-1].split(', ')]
+
+                        if not only_car:
+                            (temp_departure_time, str_departure_time) = get_min_arrival_time(schedule, temp_arrival_time)
+
+                            #we are waiting vehicle - waiting time calculation
+                            time_waiting = (temp_departure_time - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+
+                            #if time is negative (when vehicle does not run and we need to wait until tomorrow)
+                            if time_waiting < 0:
+                                time_waiting = (temp_departure_time +
+                                                datetime.timedelta(days=1)
+                                                - datetime.datetime.strptime(temp_arrival_time, '%H:%M')).total_seconds() / 3600
+                        else:
+                            temp_departure_time = datetime.datetime.strptime(temp_arrival_time, '%H:%M') + datetime.timedelta(hours=1)
+                            str_departure_time = datetime.datetime.strftime( temp_departure_time, '%H:%M')
 
 
-                next_distance = distance[current_vert.name] + dist_to_next + time_waiting if search_feature else 0 #now with waiting time
-                #next_distance = distance[current_vert.name] + dist_to_next
-
-                if next_vert.name not in distance or next_distance < distance[next_vert.name]:
-                    distance[next_vert.name] = next_distance
-                    priority = next_distance + heuristic(goal_vert, next_vert)
-
-                    #put vert in queue - (priority + next_vert.id) is real prioruty in queue
-                    cities_queue.put(((priority, next_vert.id), next_vert))
 
 
-                    paths[next_vert.name] = current_vert.name
+                        next_distance = distance[current_vert.name] + dist_to_next + (time_waiting if (search_feature and not only_car) else 0) #now with waiting time
+                        #next_distance = distance[current_vert.name] + dist_to_next
 
-                    relation_props_in_path[next_vert.name] = [prop_relation_next.relation_type, prop_relation_next.time, prop_relation_next.cost, str_departure_time]
-                                                                                                                                                   #add departure_time
+                        if next_vert.name not in distance or next_distance < distance[next_vert.name]:
+
+                            distance[next_vert.name] = next_distance
+                            priority = next_distance + heuristic(goal_vert, next_vert)
+
+                            #put vert in queue - (priority + next_vert.id) is real prioruty in queue
+                            cities_queue.put(((priority, next_vert.id), next_vert))
 
 
-                    #add time of arrival to next vertex
-                    arrival_departure[next_vert.name] = [] #allocare list
-                    arrival_departure[next_vert.name].append(datetime.datetime.strftime(
-                        temp_departure_time + datetime.timedelta(hours=dist_to_next), '%H:%M'))
-                    arrival_departure[next_vert.name].append(None)
+                            paths[next_vert.name] = current_vert.name
+
+                            relation_props_in_path[next_vert.name] = [prop_relation_next.relation_type, prop_relation_next.time, prop_relation_next.cost, str_departure_time]
+                                                                                                                                                           #add departure_time
+
+
+                            #add time of arrival to next vertex
+                            arrival_departure[next_vert.name] = [] #allocare list
+                            arrival_departure[next_vert.name].append(datetime.datetime.strftime(
+                                temp_departure_time + datetime.timedelta(hours=dist_to_next), '%H:%M'))
+                            arrival_departure[next_vert.name].append(None)
 
 
         reviewed_verts.append(current_vert.id)
 
 
     if not path_exists:
-        return "path doesn't exist"
+        return None
 
     final_path = []
     final_relation_props_in_path = {}
@@ -179,13 +170,18 @@ def a_star(start_name, goal_name, cities, relations, props_relation, search_feat
     temp_city = goal_name
     while  paths[temp_city] != None:
         temp_city = paths[temp_city]
+        if relation_props_in_path[temp_city] != None:
+          relation_props_in_path[temp_city][1] = round(relation_props_in_path[temp_city][1] / 60, 1)
         final_path.append({'name': temp_city, 'props': relation_props_in_path[temp_city], 'time': arrival_departure[temp_city]})
+        
+        
     final_path.reverse()
+
+    if relation_props_in_path[goal_name] != None:
+      relation_props_in_path[goal_name][1] = round(relation_props_in_path[goal_name][1] / 60, 1)
 
     final_path.append({'name': goal_name, 'props': relation_props_in_path[goal_name], 'time': arrival_departure[goal_name]})
 
-
-    print(final_path)
     return final_path
 
 
