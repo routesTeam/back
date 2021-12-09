@@ -12,7 +12,6 @@ from .models import *
 
 from services.a_star import *
 
-# Create your views here.
 def index(request):
     form = CitiesForm(initial={
       'first_city': request.GET.get('first_city'),
@@ -45,12 +44,6 @@ def index(request):
     else:
       res = json.loads(route[0].path)
 
-    
-    # try:
-    #     res = a_star(first_city, second_city, City.objects.all(), Relation.objects.all(), PropsRelation.objects.all(), faster, time_start, only_car=is_only_road)
-    # except ValueError as err:
-    #     res = None
-
     route = []
     sum = {'time': 0, 'cost': 0}
 
@@ -76,19 +69,6 @@ def index(request):
       'minutes': ['0' + str(m) for m in list(range(10))] + [str(m) for m in list(range(10,61))],
       'routes': Route.objects.all().filter(first_city=first_city, second_city=second_city)
     })
-
-
-def testgen(request):
-    # city = CityDebug(name='второй город', point_x=0.2341, point_y=1.2345)
-    # city.save()
-    # relation = RelationDebug(first_city_id=1, second_city_id=2)
-    # relation.save()
-    # print(relation.id) 
-    shedule = 'null'
-    props_relation = PropsRelationDebug(relation_type='Авто', time=120, 
-                                        cost=0, relation_id=1, schedule=json.dumps(shedule))
-    props_relation.save()                                    
-    return HttpResponse(json.dumps([]), content_type="application/json")
 
 
 def generator(request):
